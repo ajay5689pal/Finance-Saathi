@@ -1,0 +1,1366 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* ================= GLOBAL FIX ================= */
+
+    html,
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+        min-height: 100%;
+        background: #08101f !important;
+    }
+
+    /* Break dashboard out of Bootstrap/base.html container */
+    .dashboard-page {
+        width: 100vw !important;
+        min-height: calc(100vh - 70px);
+        margin-left: calc(50% - 50vw) !important;
+        margin-right: calc(50% - 50vw) !important;
+        padding: 55px 0 100px !important;
+        background:
+            radial-gradient(
+                circle at 80% 10%,
+                rgba(99, 70, 220, 0.12),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 15% 60%,
+                rgba(37, 99, 235, 0.06),
+                transparent 25%
+            ),
+            #08101f !important;
+
+        color: #e8edf7;
+    }
+
+    .dashboard-container {
+        width: min(1230px, calc(100% - 40px)) !important;
+        margin: 0 auto !important;
+    }
+
+
+    /* ================= HERO ================= */
+
+    .dashboard-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 50px;
+        margin-bottom: 30px;
+    }
+
+    .welcome-text {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .small-title {
+        color: #94a3b8;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .welcome-text h1 {
+        margin: 0;
+        font-size: clamp(32px, 4vw, 48px);
+        font-weight: 800;
+        letter-spacing: -1.5px;
+        color: #eef2ff;
+        word-break: break-word;
+    }
+
+    .welcome-text p {
+        color: #94a3b8;
+        font-size: 15px;
+        margin-top: 14px;
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: 14px;
+        margin-top: 25px;
+        flex-wrap: wrap;
+    }
+
+    .upload-btn,
+    .add-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        text-decoration: none !important;
+        font-weight: 700;
+        font-size: 14px;
+        border-radius: 13px;
+        transition: all 0.25s ease;
+        cursor: pointer;
+    }
+
+    .upload-btn {
+        padding: 15px 22px;
+        color: #ffffff !important;
+        border: 1px solid rgba(132, 102, 255, 0.5);
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        box-shadow: 0 10px 28px rgba(82, 70, 220, 0.25);
+    }
+
+    .upload-btn:hover {
+        transform: translateY(-2px);
+        color: #ffffff !important;
+        box-shadow: 0 16px 35px rgba(82, 70, 220, 0.4);
+    }
+
+    .add-btn {
+        padding: 14px 22px;
+        color: #d8e0ef !important;
+        border: 1px solid #334155;
+        background: rgba(255, 255, 255, 0.025);
+    }
+
+    .add-btn:hover {
+        color: #ffffff !important;
+        border-color: #6678a0;
+        background: rgba(255, 255, 255, 0.07);
+    }
+
+
+    /* ================= GRAPH ================= */
+
+    .hero-graph {
+        width: 300px;
+        height: 145px;
+        flex-shrink: 0;
+
+        border: 1px solid rgba(119, 84, 255, 0.5);
+        border-radius: 18px;
+
+        background: linear-gradient(
+            145deg,
+            rgba(42, 38, 82, 0.95),
+            rgba(13, 20, 40, 0.9)
+        );
+
+        padding: 18px;
+        transform: rotate(3deg);
+
+        box-shadow: 0 18px 55px rgba(80, 50, 200, 0.12);
+    }
+
+    .graph-dots {
+        display: flex;
+        gap: 6px;
+    }
+
+    .graph-dots span {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        display: block;
+    }
+
+    .graph-dots span:nth-child(1) {
+        background: #8b5cf6;
+    }
+
+    .graph-dots span:nth-child(2) {
+        background: #60a5fa;
+    }
+
+    .graph-dots span:nth-child(3) {
+        background: #22c55e;
+    }
+
+    .graph-line {
+        margin-top: 25px;
+        width: 100%;
+        height: 65px;
+    }
+
+
+    /* ================= CATEGORY CARDS ================= */
+
+    .category-grid {
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+        margin: 25px 0 28px;
+    }
+
+    .category-card {
+        min-height: 190px;
+        border-radius: 20px;
+        padding: 22px 23px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid transparent;
+        transition: all 0.25s ease;
+    }
+
+    .category-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .category-card::after {
+        content: "";
+        position: absolute;
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        right: -55px;
+        bottom: -70px;
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+    .food-card {
+        background: linear-gradient(135deg, #182d53, #1c3b70);
+        border-color: #28599a;
+    }
+
+    .travel-card {
+        background: linear-gradient(135deg, #10353a, #145246);
+        border-color: #1c6b5b;
+    }
+
+    .education-card {
+        background: linear-gradient(135deg, #401625, #6b1f2d);
+        border-color: #813044;
+    }
+
+    .misc-card {
+        background: linear-gradient(135deg, #3b2807, #644500);
+        border-color: #7d5a08;
+    }
+
+    .card-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+
+    .category-icon {
+        width: 61px;
+        height: 61px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 17px;
+        font-size: 27px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+    }
+
+    .card-arrow {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: #b7c0d3;
+        font-size: 22px;
+    }
+
+    .category-name {
+        margin-top: 20px;
+        font-size: 15px;
+        font-weight: 700;
+        color: #c7d0df;
+    }
+
+    .category-amount {
+        margin-top: 8px;
+        font-size: 26px;
+        font-weight: 800;
+        color: #ffffff;
+    }
+
+
+    /* ================= TRANSACTIONS ================= */
+
+    .transactions-section {
+        border-radius: 22px;
+        border: 1px solid #1d2b45;
+
+        background: linear-gradient(
+            145deg,
+            rgba(20, 30, 52, 0.95),
+            rgba(11, 19, 35, 0.98)
+        );
+
+        padding: 26px;
+        overflow: hidden;
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .section-header h2 {
+        margin: 0;
+        font-size: 23px;
+        font-weight: 800;
+        color: #eef2ff;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+        border: 1px solid #25334e;
+        border-radius: 14px;
+    }
+
+    .transaction-table {
+        width: 100%;
+        min-width: 700px;
+        border-collapse: collapse;
+        margin: 0 !important;
+        background: transparent !important;
+    }
+
+    .transaction-table thead {
+        background: rgba(65, 81, 116, 0.32);
+    }
+
+    .transaction-table th {
+        padding: 18px;
+        text-align: left;
+        color: #b9c5d9;
+        font-size: 14px;
+        font-weight: 700;
+        border-bottom: 1px solid #52627f;
+    }
+
+    .transaction-table td {
+        padding: 18px;
+        color: #d9e1ee;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 14px;
+        background: transparent !important;
+    }
+
+    .transaction-table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.035);
+    }
+
+    .transaction-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .amount-cell {
+        color: #ffffff !important;
+        font-weight: 700;
+    }
+
+    .category-badge {
+        display: inline-flex;
+        padding: 6px 11px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        background: rgba(99, 102, 241, 0.13);
+        border: 1px solid rgba(99, 102, 241, 0.25);
+        color: #b9b8ff;
+    }
+
+
+    /* ================= EMPTY STATE ================= */
+
+    .empty-state {
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .empty-icon {
+        width: 78px;
+        height: 78px;
+        margin: 0 auto 18px;
+        border-radius: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+        background: linear-gradient(145deg, #18294d, #101a32);
+        border: 1px solid #30446c;
+    }
+
+    .empty-state h3 {
+        margin: 0 0 9px;
+        font-size: 21px;
+        color: white;
+    }
+
+    .empty-state p {
+        margin: 0;
+        color: #8795ae;
+    }
+
+
+    /* ================= CHATBOT ================= */
+
+    .ai-chat-float {
+        position: fixed !important;
+        right: 28px !important;
+        bottom: 28px !important;
+
+        z-index: 99999 !important;
+
+        display: flex !important;
+        align-items: center;
+        gap: 10px;
+
+        border: 1px solid rgba(139, 92, 246, 0.45) !important;
+        outline: none !important;
+
+        padding: 15px 22px !important;
+        border-radius: 14px !important;
+
+        background: linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        ) !important;
+
+        color: white !important;
+
+        font-size: 14px;
+        font-weight: 700;
+
+        cursor: pointer;
+
+        box-shadow: 0 10px 35px rgba(80, 70, 255, 0.45);
+
+        transition: all 0.25s ease;
+    }
+
+    .ai-chat-float:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 45px rgba(80, 70, 255, 0.6);
+    }
+
+    .ai-chat-window {
+        position: fixed !important;
+
+        right: 28px !important;
+        bottom: 95px !important;
+
+        width: 400px !important;
+        height: 580px !important;
+
+        max-width: calc(100vw - 30px);
+
+        display: none !important;
+        flex-direction: column;
+
+        z-index: 999999 !important;
+
+        overflow: hidden;
+
+        border-radius: 22px;
+
+        background: linear-gradient(
+            145deg,
+            #121b32,
+            #080e1d
+        ) !important;
+
+        border: 1px solid rgba(99, 102, 241, 0.4);
+
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.65);
+    }
+
+    .ai-chat-window.active {
+        display: flex !important;
+    }
+
+    .ai-chat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        padding: 18px 20px;
+
+        background: linear-gradient(
+            135deg,
+            rgba(79, 70, 229, 0.3),
+            rgba(37, 99, 235, 0.1)
+        );
+
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .ai-header-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .ai-avatar,
+    .chat-ai-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: linear-gradient(135deg, #7c3aed, #2563eb);
+        color: white;
+    }
+
+    .ai-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 14px;
+        font-size: 22px;
+    }
+
+    .ai-header-info h4 {
+        margin: 0;
+        color: white;
+        font-size: 16px;
+    }
+
+    .ai-header-info p {
+        margin: 4px 0 0;
+        color: #94a3b8;
+        font-size: 12px;
+    }
+
+    .online-dot {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #22c55e;
+    }
+
+    .close-chat {
+        border: none !important;
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        background: rgba(255, 255, 255, 0.06) !important;
+        color: #cbd5e1 !important;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    .ai-chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        background: transparent !important;
+    }
+
+    .chat-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+
+    .chat-ai-icon {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        border-radius: 10px;
+    }
+
+    .chat-bubble {
+        max-width: 85%;
+        padding: 14px;
+        font-size: 14px;
+        line-height: 1.6;
+        word-break: break-word;
+    }
+
+    .ai-bubble {
+        border-radius: 5px 16px 16px 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        color: #cbd5e1;
+    }
+
+    .user-row {
+        justify-content: flex-end;
+    }
+
+    .user-bubble {
+        border-radius: 16px 5px 16px 16px;
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        color: white;
+    }
+
+    .quick-prompts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-left: 42px;
+        margin-bottom: 15px;
+    }
+
+    .quick-question {
+        border: 1px solid rgba(99, 102, 241, 0.3) !important;
+        border-radius: 10px;
+        padding: 8px 10px;
+        background: rgba(99, 102, 241, 0.08) !important;
+        color: #aeb9d1 !important;
+        font-size: 12px;
+        cursor: pointer;
+    }
+
+    .chat-input-area {
+        display: flex;
+        gap: 10px;
+        padding: 15px;
+        background: #0c1426;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .chat-input-area input {
+        flex: 1;
+        padding: 13px 15px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        outline: none;
+        background: rgba(255, 255, 255, 0.05) !important;
+        color: white !important;
+    }
+
+    #sendMessage {
+        width: 48px;
+        border: none !important;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #2563eb, #7c3aed) !important;
+        color: white !important;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+
+    /* ================= RESPONSIVE ================= */
+
+    @media (max-width: 1000px) {
+
+        .category-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .hero-graph {
+            display: none;
+        }
+    }
+
+    @media (max-width: 600px) {
+
+        .dashboard-page {
+            padding-top: 35px !important;
+        }
+
+        .dashboard-container {
+            width: calc(100% - 30px) !important;
+        }
+
+        .dashboard-hero {
+            display: block;
+        }
+
+        .welcome-text h1 {
+            font-size: 32px;
+        }
+
+        .category-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .transactions-section {
+            padding: 16px;
+        }
+
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .ai-chat-float {
+            right: 15px !important;
+            bottom: 15px !important;
+        }
+
+        .ai-chat-window {
+            right: 15px !important;
+            bottom: 80px !important;
+            width: calc(100vw - 30px) !important;
+            height: 70vh !important;
+        }
+    }
+</style>
+<div class="dashboard-page">
+
+    <div class="dashboard-container">
+
+        <!-- ================= HERO SECTION ================= -->
+
+        <div class="dashboard-hero">
+
+            <div class="welcome-text">
+
+                <div class="small-title">
+                    Welcome back,
+                </div>
+
+                <h1>
+                    {{ current_user.email }}
+                    <span>👋</span>
+                </h1>
+
+                <p>
+                    Here's what's happening with your finances today.
+                </p>
+
+                <div class="hero-actions">
+
+                    <a href="{{ url_for('upload') }}" class="upload-btn">
+                        ☁️
+                        Upload New Statement
+                    </a>
+
+                    <a href="{{ url_for('add_transaction') }}" class="add-btn">
+                        ＋ Add Transaction
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="hero-graph">
+
+                <div class="graph-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+                <svg
+                    class="graph-line"
+                    viewBox="0 0 280 70"
+                    preserveAspectRatio="none"
+                >
+                    <polyline
+                        points="0,55 25,40 45,48 70,20 95,38 120,14 145,30 170,8 195,22 220,0 245,15 270,7"
+                        fill="none"
+                        stroke="#9b5cff"
+                        stroke-width="3"
+                    />
+                </svg>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= CATEGORY CARDS ================= -->
+
+        <div class="category-grid">
+
+            <div class="category-card food-card">
+
+                <div class="card-top">
+
+                    <div class="category-icon">
+                        🍔
+                    </div>
+
+                    <div class="card-arrow">
+                        ›
+                    </div>
+
+                </div>
+
+                <div class="category-name">
+                    Food
+                </div>
+
+                <div class="category-amount">
+                    ₹{{ "%.2f"|format(totals.Food) }}
+                </div>
+
+            </div>
+
+
+            <div class="category-card travel-card">
+
+                <div class="card-top">
+
+                    <div class="category-icon">
+                        ✈️
+                    </div>
+
+                    <div class="card-arrow">
+                        ›
+                    </div>
+
+                </div>
+
+                <div class="category-name">
+                    Travel
+                </div>
+
+                <div class="category-amount">
+                    ₹{{ "%.2f"|format(totals.Travel) }}
+                </div>
+
+            </div>
+
+
+            <div class="category-card education-card">
+
+                <div class="card-top">
+
+                    <div class="category-icon">
+                        🎓
+                    </div>
+
+                    <div class="card-arrow">
+                        ›
+                    </div>
+
+                </div>
+
+                <div class="category-name">
+                    Education
+                </div>
+
+                <div class="category-amount">
+                    ₹{{ "%.2f"|format(totals.Education) }}
+                </div>
+
+            </div>
+
+
+            <div class="category-card misc-card">
+
+                <div class="card-top">
+
+                    <div class="category-icon">
+                        🛍️
+                    </div>
+
+                    <div class="card-arrow">
+                        ›
+                    </div>
+
+                </div>
+
+                <div class="category-name">
+                    Miscellaneous
+                </div>
+
+                <div class="category-amount">
+                    ₹{{ "%.2f"|format(totals.Miscellaneous) }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= RECENT TRANSACTIONS ================= -->
+
+        <div class="transactions-section">
+
+            <div class="section-header">
+
+                <h2>
+                    Recent Transactions
+                </h2>
+
+                <a href="{{ url_for('add_transaction') }}" class="upload-btn">
+                    ＋ Add Transaction
+                </a>
+
+            </div>
+
+
+            {% if transactions %}
+
+            <div class="table-wrapper">
+
+                <table class="transaction-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Category</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for transaction in transactions %}
+
+                        <tr>
+
+                            <td>
+                                {{ transaction.date }}
+                            </td>
+
+                            <td>
+                                {{ transaction.description }}
+                            </td>
+
+                            <td class="amount-cell">
+                                ₹{{ "%.2f"|format(transaction.amount) }}
+                            </td>
+
+                            <td>
+                                <span class="category-badge">
+                                    {{ transaction.category }}
+                                </span>
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    📂
+                </div>
+
+                <h3>
+                    No transactions yet
+                </h3>
+
+                <p>
+                    Upload your statement to get started or add a transaction manually.
+                </p>
+
+                <div class="hero-actions" style="justify-content: center;">
+
+                    <a
+                        href="{{ url_for('upload') }}"
+                        class="empty-upload"
+                    >
+                        Upload Statement
+                    </a>
+
+                    <a
+                        href="{{ url_for('add_transaction') }}"
+                        class="add-btn"
+                    >
+                        ＋ Add Transaction
+                    </a>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= FINANCE AI CHATBOT ================= -->
+
+<button
+    type="button"
+    id="openChat"
+    class="ai-chat-float"
+>
+    <span class="ai-sparkle">✦</span>
+    <span>Ask Finance AI</span>
+</button>
+
+
+<div
+    id="chatWindow"
+    class="ai-chat-window"
+>
+
+    <div class="ai-chat-header">
+
+        <div class="ai-header-info">
+
+            <div class="ai-avatar">
+                ✦
+            </div>
+
+            <div>
+
+                <h4>
+                    Finance AI
+                </h4>
+
+                <p>
+                    <span class="online-dot"></span>
+                    Your personal expense analyst
+                </p>
+
+            </div>
+
+        </div>
+
+        <button
+            type="button"
+            id="closeChat"
+            class="close-chat"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <div
+        id="chatMessages"
+        class="ai-chat-messages"
+    >
+
+        <div class="chat-row ai-row">
+
+            <div class="chat-ai-icon">
+                ✦
+            </div>
+
+            <div class="chat-bubble ai-bubble">
+
+                Hey {{ current_user.email.split('@')[0] }} 👋
+
+                <br><br>
+
+                I can analyze your transactions and help you understand:
+
+                <br><br>
+
+                • How much you spent<br>
+                • Category-wise expenses<br>
+                • Where you are overspending<br>
+                • How to reduce expenses<br>
+                • Next month's budget<br>
+                • Personalized saving suggestions
+
+            </div>
+
+        </div>
+
+
+        <div class="quick-prompts">
+
+            <button class="quick-question">
+                💰 How much did I spend?
+            </button>
+
+            <button class="quick-question">
+                📊 Where did I spend the most?
+            </button>
+
+            <button class="quick-question">
+                ✂️ How can I reduce expenses?
+            </button>
+
+            <button class="quick-question">
+                🎯 Plan next month's budget
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="chat-input-area">
+
+        <input
+            type="text"
+            id="chatInput"
+            placeholder="Ask anything about your finances..."
+            autocomplete="off"
+        >
+
+        <button
+            type="button"
+            id="sendMessage"
+        >
+            ↑
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const openChat = document.getElementById("openChat");
+    const closeChat = document.getElementById("closeChat");
+    const chatWindow = document.getElementById("chatWindow");
+
+    const chatInput = document.getElementById("chatInput");
+    const sendMessage = document.getElementById("sendMessage");
+    const chatMessages = document.getElementById("chatMessages");
+
+
+    /* ================= OPEN CHAT ================= */
+
+    openChat.addEventListener("click", function () {
+
+        chatWindow.classList.add("active");
+
+        setTimeout(function () {
+            chatInput.focus();
+        }, 100);
+
+    });
+
+
+    /* ================= CLOSE CHAT ================= */
+
+    closeChat.addEventListener("click", function () {
+
+        chatWindow.classList.remove("active");
+
+    });
+
+
+    /* ================= ESCAPE HTML ================= */
+
+    function escapeHTML(text) {
+
+        const div = document.createElement("div");
+
+        div.textContent = text;
+
+        return div.innerHTML;
+
+    }
+
+
+    /* ================= ADD USER MESSAGE ================= */
+
+    function addUserMessage(message) {
+
+        const row = document.createElement("div");
+
+        row.className = "chat-row user-row";
+
+        row.innerHTML = `
+            <div class="chat-bubble user-bubble">
+                ${escapeHTML(message)}
+            </div>
+        `;
+
+        chatMessages.appendChild(row);
+
+        chatMessages.scrollTop =
+            chatMessages.scrollHeight;
+
+    }
+
+
+    /* ================= ADD AI MESSAGE ================= */
+
+    function addAIMessage(message) {
+
+        const row = document.createElement("div");
+
+        row.className = "chat-row ai-row";
+
+        row.innerHTML = `
+            <div class="chat-ai-icon">
+                ✦
+            </div>
+
+            <div class="chat-bubble ai-bubble">
+                ${escapeHTML(message).replace(/\n/g, "<br>")}
+            </div>
+        `;
+
+        chatMessages.appendChild(row);
+
+        chatMessages.scrollTop =
+            chatMessages.scrollHeight;
+
+    }
+
+
+    /* ================= TYPING MESSAGE ================= */
+
+    function addTypingMessage() {
+
+        const row = document.createElement("div");
+
+        row.className = "chat-row ai-row";
+        row.id = "typingRow";
+
+        row.innerHTML = `
+            <div class="chat-ai-icon">
+                ✦
+            </div>
+
+            <div class="chat-bubble ai-bubble typing-message">
+                Analyzing your finances...
+            </div>
+        `;
+
+        chatMessages.appendChild(row);
+
+        chatMessages.scrollTop =
+            chatMessages.scrollHeight;
+
+    }
+
+
+    function removeTypingMessage() {
+
+        const typingRow =
+            document.getElementById("typingRow");
+
+        if (typingRow) {
+            typingRow.remove();
+        }
+
+    }
+
+
+    /* ================= SEND CHAT ================= */
+
+    async function sendChat() {
+
+        const message =
+            chatInput.value.trim();
+
+        if (!message) {
+            return;
+        }
+
+        addUserMessage(message);
+
+        chatInput.value = "";
+
+        addTypingMessage();
+
+        sendMessage.disabled = true;
+
+        try {
+
+            const response = await fetch(
+                "{{ url_for('finance_chat') }}",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        message: message
+                    })
+                }
+            );
+
+            const data =
+                await response.json();
+
+            removeTypingMessage();
+
+            addAIMessage(
+                data.reply ||
+                "Sorry, I couldn't analyze your expenses. Please try again."
+            );
+
+        }
+
+        catch (error) {
+
+            removeTypingMessage();
+
+            addAIMessage(
+                "Something went wrong while analyzing your finances. Please try again."
+            );
+
+            console.error(error);
+
+        }
+
+        finally {
+
+            sendMessage.disabled = false;
+
+        }
+
+    }
+
+
+    /* ================= SEND BUTTON ================= */
+
+    sendMessage.addEventListener(
+        "click",
+        sendChat
+    );
+
+
+    /* ================= ENTER KEY ================= */
+
+    chatInput.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (event.key === "Enter") {
+
+                event.preventDefault();
+
+                sendChat();
+
+            }
+
+        }
+    );
+
+
+    /* ================= QUICK QUESTIONS ================= */
+
+    document
+        .querySelectorAll(".quick-question")
+        .forEach(function (button) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    const question =
+                        button.innerText;
+
+                    chatInput.value =
+                        question;
+
+                    sendChat();
+
+                }
+            );
+
+        });
+
+</script>
+
+{% endblock %}

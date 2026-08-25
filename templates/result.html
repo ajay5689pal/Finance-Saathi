@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Transaction Categories</title>
+</head>
+<body>
+  <h1>Categorized Transactions</h1>
+  <table border="1">
+    <tr>
+      <th>Transaction</th>
+      <th>Category</th>
+    </tr>
+    {% for item in categorized %}
+    <tr>
+      <td>{{ item.transaction }}</td>
+      <td>{{ item.category }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <br>
+  <a href="/">Upload another</a>
+</body>
+</html>

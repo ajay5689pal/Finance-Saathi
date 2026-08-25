@@ -1,0 +1,953 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+
+body {
+    background: #050b18;
+}
+
+
+/* =================================
+   PAGE
+================================= */
+
+.budget-page {
+
+    min-height: calc(100vh - 56px);
+
+    padding: 45px 0 70px;
+
+    color: white;
+
+    background:
+
+        radial-gradient(
+            circle at 85% 10%,
+            rgba(124, 58, 237, 0.14),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 10% 70%,
+            rgba(37, 99, 235, 0.10),
+            transparent 30%
+        ),
+
+        #050b18;
+}
+
+
+.budget-container {
+    max-width: 1400px;
+}
+
+
+/* =================================
+   HEADER
+================================= */
+
+.analysis-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    margin-bottom: 35px;
+
+    gap: 20px;
+}
+
+
+.analysis-title {
+
+    font-size: clamp(2rem, 4vw, 3.2rem);
+
+    font-weight: 750;
+
+    letter-spacing: -1px;
+
+    margin-bottom: 10px;
+}
+
+
+.gradient-text {
+
+    background:
+        linear-gradient(
+            90deg,
+            #60a5fa,
+            #818cf8,
+            #c084fc
+        );
+
+    -webkit-background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+}
+
+
+.analysis-subtitle {
+
+    color: #8f9bb2;
+
+    font-size: 1rem;
+}
+
+
+.back-btn {
+
+    padding: 12px 20px;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    color: #b9c4dc;
+
+    border: 1px solid rgba(150, 160, 210, 0.2);
+
+    background: rgba(255,255,255,0.03);
+
+    transition: 0.25s;
+}
+
+
+.back-btn:hover {
+
+    color: white;
+
+    background: rgba(99,102,241,0.12);
+}
+
+
+/* =================================
+   SUMMARY CARDS
+================================= */
+
+.summary-card {
+
+    height: 100%;
+
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 24px;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(20, 31, 60, 0.95),
+            rgba(9, 16, 34, 0.98)
+        );
+
+    border:
+        1px solid rgba(110, 125, 180, 0.18);
+
+    transition: 0.25s;
+}
+
+
+.summary-card:hover {
+
+    transform: translateY(-5px);
+
+    border-color:
+        rgba(120, 110, 255, 0.4);
+}
+
+
+.summary-icon {
+
+    width: 52px;
+
+    height: 52px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 15px;
+
+    font-size: 24px;
+
+    margin-bottom: 20px;
+
+    background:
+        rgba(99,102,241,0.15);
+
+    border:
+        1px solid rgba(120,110,255,0.25);
+}
+
+
+.summary-label {
+
+    color: #8f9bb2;
+
+    font-size: 0.9rem;
+
+    margin-bottom: 7px;
+}
+
+
+.summary-value {
+
+    font-size: 1.7rem;
+
+    font-weight: 700;
+
+    color: white;
+}
+
+
+.savings-card {
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(13, 70, 56, 0.8),
+            rgba(8, 33, 38, 0.95)
+        );
+
+    border-color:
+        rgba(34,197,94,0.25);
+}
+
+
+.savings-card .summary-icon {
+
+    background:
+        rgba(34,197,94,0.12);
+
+    border-color:
+        rgba(34,197,94,0.25);
+}
+
+
+/* =================================
+   INSIGHTS
+================================= */
+
+.insights-box {
+
+    margin-top: 28px;
+
+    padding: 28px;
+
+    border-radius: 20px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(27, 23, 71, 0.85),
+            rgba(12, 20, 45, 0.95)
+        );
+
+    border:
+        1px solid rgba(112,93,255,0.25);
+}
+
+
+.section-title {
+
+    font-size: 1.35rem;
+
+    font-weight: 650;
+
+    margin-bottom: 20px;
+}
+
+
+.insight-item {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 14px;
+
+    padding: 15px 0;
+
+    color: #b9c4d8;
+
+    border-bottom:
+        1px solid rgba(255,255,255,0.06);
+}
+
+
+.insight-item:last-child {
+    border-bottom: none;
+}
+
+
+.insight-icon {
+
+    width: 34px;
+
+    height: 34px;
+
+    min-width: 34px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background:
+        rgba(124,58,237,0.16);
+}
+
+
+/* =================================
+   CATEGORY ANALYSIS
+================================= */
+
+.analysis-table-card {
+
+    margin-top: 28px;
+
+    padding: 28px;
+
+    border-radius: 20px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(15,24,46,.96),
+            rgba(8,15,31,.98)
+        );
+
+    border:
+        1px solid rgba(93,104,151,.2);
+}
+
+
+.table-wrapper {
+
+    overflow-x: auto;
+
+    border-radius: 14px;
+
+    border:
+        1px solid rgba(255,255,255,0.06);
+}
+
+
+.analysis-table {
+
+    margin: 0;
+
+    width: 100%;
+
+    color: #d6dbea;
+}
+
+
+.analysis-table thead {
+
+    background:
+        rgba(30,42,76,.8);
+}
+
+
+.analysis-table th {
+
+    padding: 18px;
+
+    color: #9facca;
+
+    border: none;
+
+    white-space: nowrap;
+}
+
+
+.analysis-table td {
+
+    padding: 18px;
+
+    border-color:
+        rgba(255,255,255,.06);
+
+    white-space: nowrap;
+}
+
+
+.analysis-table tbody tr:hover {
+
+    background:
+        rgba(91,78,255,.07);
+}
+
+
+.positive {
+    color: #fb7185;
+}
+
+
+.negative {
+    color: #4ade80;
+}
+
+
+.stable {
+    color: #94a3b8;
+}
+
+
+.budget-highlight {
+
+    color: #a78bfa;
+
+    font-weight: 700;
+}
+
+
+/* =================================
+   SUGGESTIONS
+================================= */
+
+.suggestions-section {
+
+    margin-top: 28px;
+}
+
+
+.suggestion-card {
+
+    height: 100%;
+
+    padding: 24px;
+
+    border-radius: 18px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(18,29,57,.95),
+            rgba(8,15,32,.98)
+        );
+
+    border:
+        1px solid rgba(110,125,180,.18);
+
+    transition: 0.25s;
+}
+
+
+.suggestion-card:hover {
+
+    transform: translateY(-5px);
+
+    border-color:
+        rgba(99,102,241,.4);
+}
+
+
+.suggestion-icon {
+
+    width: 55px;
+
+    height: 55px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 16px;
+
+    font-size: 26px;
+
+    margin-bottom: 18px;
+
+    background:
+        rgba(99,102,241,.12);
+}
+
+
+.suggestion-title {
+
+    font-size: 1.05rem;
+
+    font-weight: 650;
+
+    margin-bottom: 10px;
+}
+
+
+.suggestion-text {
+
+    color: #8996b0;
+
+    line-height: 1.6;
+
+    font-size: 0.92rem;
+}
+
+
+.saving-amount {
+
+    margin-top: 20px;
+
+    display: inline-block;
+
+    padding: 8px 12px;
+
+    border-radius: 9px;
+
+    color: #4ade80;
+
+    background:
+        rgba(34,197,94,.10);
+
+    border:
+        1px solid rgba(34,197,94,.18);
+
+    font-size: 0.85rem;
+
+    font-weight: 600;
+}
+
+
+.empty-analysis {
+
+    text-align: center;
+
+    padding: 90px 20px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(15,24,46,.8);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    color: #8f9bb2;
+}
+
+
+.empty-analysis h3 {
+
+    color: white;
+
+    margin-top: 20px;
+}
+
+
+@media(max-width: 768px) {
+
+    .analysis-header {
+        flex-direction: column;
+    }
+
+}
+
+</style>
+
+
+<div class="budget-page">
+
+    <div class="container budget-container">
+
+
+        <!-- HEADER -->
+
+        <div class="analysis-header">
+
+            <div>
+
+                <h1 class="analysis-title">
+
+                    Smart <span class="gradient-text">
+                        Budget Analysis
+                    </span>
+
+                </h1>
+
+                <p class="analysis-subtitle">
+
+                    AI-style insights based on your previous spending patterns.
+
+                </p>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="back-btn"
+            >
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+
+        {% if last_month_total == 0 %}
+
+        <!-- NO DATA -->
+
+        <div class="empty-analysis">
+
+            <div style="font-size: 55px;">
+                📊
+            </div>
+
+            <h3>
+                Not enough spending data yet
+            </h3>
+
+            <p>
+                Add transactions or upload a statement to receive your personalized budget analysis.
+            </p>
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="btn btn-primary mt-3"
+            >
+                Add Transactions
+            </a>
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- SUMMARY CARDS -->
+
+        <div class="row g-4">
+
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="summary-card">
+
+                    <div class="summary-icon">
+                        📅
+                    </div>
+
+                    <div class="summary-label">
+                        Last Month's Spending
+                    </div>
+
+                    <div class="summary-value">
+                        ₹{{ "%.2f"|format(last_month_total) }}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="summary-card">
+
+                    <div class="summary-icon">
+                        📈
+                    </div>
+
+                    <div class="summary-label">
+                        Predicted Next Month
+                    </div>
+
+                    <div class="summary-value">
+                        ₹{{ "%.2f"|format(predicted_total) }}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="summary-card">
+
+                    <div class="summary-icon">
+                        🎯
+                    </div>
+
+                    <div class="summary-label">
+                        Recommended Budget
+                    </div>
+
+                    <div class="summary-value">
+                        ₹{{ "%.2f"|format(recommended_total) }}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="summary-card savings-card">
+
+                    <div class="summary-icon">
+                        💰
+                    </div>
+
+                    <div class="summary-label">
+                        Potential Savings
+                    </div>
+
+                    <div class="summary-value">
+                        ₹{{ "%.2f"|format(potential_savings) }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- KEY INSIGHTS -->
+
+        <div class="insights-box">
+
+            <h3 class="section-title">
+
+                ✨ Your Spending Insights
+
+            </h3>
+
+
+            {% for insight in insights %}
+
+            <div class="insight-item">
+
+                <div class="insight-icon">
+                    💡
+                </div>
+
+                <div>
+                    {{ insight }}
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+
+        </div>
+
+
+        <!-- CATEGORY ANALYSIS -->
+
+        <div class="analysis-table-card">
+
+            <h3 class="section-title">
+
+                📊 Category-wise Budget Plan
+
+            </h3>
+
+
+            <div class="table-wrapper">
+
+                <table class="table analysis-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Category</th>
+
+                            <th>Previous Month</th>
+
+                            <th>Last Month</th>
+
+                            <th>Change</th>
+
+                            <th>Predicted Expense</th>
+
+                            <th>Recommended Budget</th>
+
+                            <th>Possible Saving</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for item in analysis %}
+
+                        <tr>
+
+                            <td>
+
+                                <strong>
+                                    {{ item.category }}
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+
+                                ₹{{ "%.2f"|format(item.previous_expense) }}
+
+                            </td>
+
+
+                            <td>
+
+                                ₹{{ "%.2f"|format(item.last_expense) }}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if item.percentage_change > 0 %}
+
+                                    <span class="positive">
+
+                                        ↑ {{ item.percentage_change }}%
+
+                                    </span>
+
+                                {% elif item.percentage_change < 0 %}
+
+                                    <span class="negative">
+
+                                        ↓ {{ item.percentage_change|abs }}%
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="stable">
+
+                                        — Stable
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                ₹{{ "%.2f"|format(item.predicted_expense) }}
+
+                            </td>
+
+
+                            <td class="budget-highlight">
+
+                                ₹{{ "%.2f"|format(item.recommended_budget) }}
+
+                            </td>
+
+
+                            <td class="negative">
+
+                                ₹{{ "%.2f"|format(item.potential_savings) }}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- COST CUTTING -->
+
+        <div class="suggestions-section">
+
+            <h3 class="section-title">
+
+                💡 Where You Can Save
+
+            </h3>
+
+
+            <div class="row g-4">
+
+                {% for suggestion in suggestions %}
+
+                <div class="col-lg-6">
+
+                    <div class="suggestion-card">
+
+                        <div class="suggestion-icon">
+
+                            {{ suggestion.icon }}
+
+                        </div>
+
+
+                        <div class="suggestion-title">
+
+                            {{ suggestion.title }}
+
+                        </div>
+
+
+                        <div class="suggestion-text">
+
+                            {{ suggestion.message }}
+
+                        </div>
+
+
+                        <div class="saving-amount">
+
+                            Potential saving:
+                            ₹{{ "%.2f"|format(suggestion.saving) }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
