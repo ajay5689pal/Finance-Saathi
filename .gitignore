@@ -1,0 +1,6 @@
+venv/
+myapp/
+__pycache__/
+*.pyc
+.env
+instance/
